@@ -1,0 +1,1270 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>KPSS Puan Hesaplayıcı</title>
+<style>
+:root{
+  --paper:#f3f5f3; --panel:#ffffff; --ink:#171c19;
+  --mid:#5b625d; --faint:#8d938e;
+  --rule:#d8ddd8; --rule-soft:#e6eae6;
+  --osym:#1f4e79; --live:#0d7a5f;
+}
+@media (prefers-color-scheme: dark){
+:root:not([data-theme="light"]){
+  --paper:#12150f; --panel:#1b1f1b; --ink:#e9ece8;
+  --mid:#a3aaa4; --faint:#7c837e;
+  --rule:#2f352f; --rule-soft:#262b26;
+  --osym:#8fb8de; --live:#57c8a3;
+}
+}
+:root[data-theme="dark"]{
+  --paper:#12150f; --panel:#1b1f1b; --ink:#e9ece8;
+  --mid:#a3aaa4; --faint:#7c837e;
+  --rule:#2f352f; --rule-soft:#262b26;
+  --osym:#8fb8de; --live:#57c8a3;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:16px;line-height:1.5;
+  font-variant-numeric:tabular-nums lining-nums;
+  padding-bottom:2rem;
+}
+.wrap{max-width:660px;margin:0 auto;padding:0 16px}
+h1{font-size:1.18rem;font-weight:600;margin:0;letter-spacing:-0.012em}
+h2{font-size:.93rem;font-weight:600;margin:0 0 11px;letter-spacing:-0.005em}
+h3{font-size:.8rem;font-weight:600;margin:0 0 8px;color:var(--mid)}
+p{margin:0}
+.off{display:none}
+.masthead{padding:16px 0 12px}
+
+.readout{
+  position:sticky;top:0;z-index:20;
+  background:var(--ink);color:var(--paper);
+  border-radius:11px;padding:9px 15px;
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  box-shadow:0 5px 16px rgba(0,0,0,.13);
+}
+.readout .tag{font-size:.74rem;opacity:.7}
+.readout .big{font-size:2.05rem;font-weight:600;line-height:1.1;letter-spacing:-0.035em;margin-left:auto}
+.readout .sub{flex-basis:100%;font-size:.71rem;opacity:.65;margin-top:-1px}
+
+section{border-top:1px solid var(--rule);padding:18px 0}
+.yearbar{padding-top:18px}
+.ybrow{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.ybrow .ycol{flex:1 1 300px;min-width:0}
+.years{display:flex;flex-wrap:wrap;gap:6px}
+.yr{
+  font:inherit;font-size:.86rem;font-weight:500;
+  padding:6px 11px;min-height:38px;
+  border:1px solid var(--rule);border-radius:8px;
+  background:var(--panel);color:var(--ink);cursor:pointer;
+}
+.yr.est{border-style:dashed}
+.yr[aria-pressed="true"]{background:var(--osym);border-color:var(--osym);color:#fff;border-style:solid}
+:root[data-theme="dark"] .yr[aria-pressed="true"]{color:#0d1319}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .yr[aria-pressed="true"]{color:#0d1319}}
+.meta{font-size:.78rem;color:var(--mid);margin-top:8px}
+
+.tog{display:inline-flex;gap:4px;margin:0 0 12px;padding:3px;background:var(--rule-soft);border-radius:9px}
+.tog button{
+  font:inherit;font-size:.81rem;font-weight:500;padding:5px 12px;min-height:34px;
+  border:none;border-radius:6px;background:transparent;color:var(--mid);cursor:pointer;
+}
+.tog button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.09)}
+
+input[type=text]{
+  font:inherit;font-size:.87rem;font-variant-numeric:tabular-nums;
+  width:100%;min-width:0;text-align:right;
+  padding:7px 10px;min-height:38px;
+  border:1px solid var(--rule);border-radius:8px;
+  background:var(--panel);color:var(--ink);
+}
+select{
+  font:inherit;font-size:.86rem;width:100%;padding:8px 10px;min-height:38px;
+  border:1px solid var(--rule);border-radius:8px;background:var(--panel);color:var(--ink);
+}
+.ybrow select{flex:0 0 auto}
+@media(min-width:640px){.ybrow select{width:236px}}
+input[type=range]{width:100%;margin:0;accent-color:var(--osym);height:24px;display:block}
+:focus-visible{outline:2px solid var(--osym);outline-offset:2px}
+
+.ptab{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr);gap:7px 8px;align-items:center}
+.ptab .ph{font-size:.75rem;color:var(--faint);text-align:center}
+.ptab .pl{font-size:.82rem;color:var(--mid);white-space:nowrap}
+.ptab .wide{grid-column:2 / 4}
+
+.srow{margin-bottom:10px}
+.srow .head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:3px}
+.srow .lab{font-size:.82rem;color:var(--mid)}
+.srow input[type=text]{width:72px;flex:0 0 auto;padding:4px 9px;min-height:32px}
+.pair{display:grid;grid-template-columns:auto minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center}
+.pair .pl{font-size:.82rem;color:var(--mid)}
+.divider{border-top:1px solid var(--rule-soft);margin:14px 0 12px}
+.note{font-size:.78rem;color:var(--mid);margin-top:9px}
+.note b{color:var(--ink);font-weight:600}
+.note span{display:block;padding:2px 0}
+
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft);border-radius:10px;overflow:hidden;margin-bottom:8px}
+@media(min-width:520px){
+  .grid.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid.g6{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(min-width:430px){.grid.g3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.grid.g3{grid-template-columns:minmax(0,1fr)}
+.adv summary{font-size:.88rem}
+.adv .tag{font-size:.76rem;color:var(--faint);font-weight:400}
+.adv .body{padding-top:14px}
+.adv h3{margin-top:16px}
+.cell{background:var(--panel);padding:9px 11px}
+.cell .k{font-size:.72rem;color:var(--faint);margin-bottom:1px;line-height:1.35}
+.cell .v{font-size:1.05rem;font-weight:600;letter-spacing:-0.015em}
+.cell .v.live{color:var(--live)}
+svg{display:block;width:100%;height:auto}
+.c-area{fill:var(--live);opacity:.12}
+.c-line{fill:none;stroke:var(--live);stroke-width:2;stroke-linejoin:round}
+.c-axis{stroke:var(--rule);stroke-width:1}
+.c-mean{stroke:var(--faint);stroke-width:1;stroke-dasharray:3 3}
+.c-band{fill:var(--osym);opacity:.16}
+.c-fill{fill:var(--live);opacity:.30}
+.c-guide{stroke:var(--rule);stroke-width:1}
+.c-top{stroke:var(--rule);stroke-width:1}
+.c-tops{fill:var(--faint);font-size:11px}
+.c-lbl{fill:var(--mid);font-size:11px}
+.c-b{stroke:var(--osym);stroke-width:2}
+.c-btx{fill:var(--osym);font-size:13px}
+.c-me{stroke:var(--live);stroke-width:3}
+.c-dot{fill:var(--live)}
+.c-metx{fill:var(--live);font-size:13px;font-weight:600}
+.c-tick{fill:var(--faint);font-size:12px}
+
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th,td{padding:7px 9px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--rule-soft)}
+th{font-size:.73rem;color:var(--faint);font-weight:500}
+th:first-child,td:first-child{text-align:left}
+tbody tr.on td{background:var(--rule-soft)}
+td.sc{color:var(--live);font-weight:600}
+
+details{border-top:1px solid var(--rule);padding:14px 0}
+summary{cursor:pointer;font-size:.9rem;font-weight:600;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"  +";color:var(--faint);font-weight:400}
+details[open] summary::after{content:"  −"}
+.steps{margin-top:11px;font-size:.84rem;color:var(--mid)}
+.steps div{padding:6px 0;border-bottom:1px solid var(--rule-soft)}
+.steps div:last-child{border-bottom:none}
+.steps b{color:var(--ink);font-weight:600}
+.eq{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.79rem;color:var(--ink);overflow-x:auto;white-space:nowrap;display:block;padding-top:2px}
+
+.err{color:#b3261e;font-size:.81rem;min-height:1.1em;margin-top:6px}
+:root[data-theme="dark"] .err{color:#f2b8b5}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .err{color:#f2b8b5}}
+footer{color:var(--faint);font-size:.76rem;padding:16px 0 0;border-top:1px solid var(--rule);line-height:1.6;max-width:72ch}
+footer p+p{margin-top:6px}
+
+@media(min-width:920px){
+  .wrap{max-width:1080px}
+  .cols{display:grid;grid-template-columns:minmax(0,0.85fr) minmax(0,1.15fr);
+        column-gap:42px;align-items:start;grid-template-rows:auto 1fr}
+  .i-nets{grid-column:1;grid-row:1}
+  .i-out {grid-column:2;grid-row:1 / span 2}
+  .i-adv {grid-column:1;grid-row:2}
+  .i-nets,.i-out{border-top:none}
+  .i-out .cell .v{font-size:1.02rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="masthead"><h1>KPSS Puan Hesaplayıcı</h1></div>
+
+<div class="readout">
+  <span class="tag">Tahminî KPSS puanı</span>
+  <span class="big" id="score">—</span>
+  <span class="sub" id="scoreSub">Bir yıl seçin, netlerinizi girin.</span>
+</div>
+
+<div class="yearbar">
+  <h2>Sınav yılı</h2>
+  <div class="ybrow">
+    <div class="ycol">
+      <div class="years" id="years"></div>
+      <p class="meta" id="meta"></p>
+    </div>
+    <select id="ptur" aria-label="Puan türü">
+      <option value="p3" selected>P3 / P93 / P94 — 0,5 GY + 0,5 GK</option>
+      <option value="p2">P2 — 0,6 GY + 0,4 GK</option>
+      <option value="p1">P1 — 0,7 GY + 0,3 GK</option>
+    </select>
+  </div>
+</div>
+
+<div class="cols">
+
+<section class="i-nets">
+  <h2>Netler</h2>
+  <div class="tog" role="group" aria-label="Giriş biçimi">
+    <button type="button" id="modeNet" aria-pressed="true">Net</button>
+    <button type="button" id="modeDY" aria-pressed="false">Doğru / Yanlış</button>
+  </div>
+
+  <div id="paneNet">
+    <div class="srow">
+      <div class="head"><span class="lab">Genel Yetenek</span><input type="text" inputmode="decimal" id="tMyGY" aria-label="Genel Yetenek netiniz"></div>
+      <input type="range" id="myGY" min="-15" max="60" step="0.25" value="50" aria-label="Genel Yetenek neti">
+    </div>
+    <div class="srow" style="margin-bottom:0">
+      <div class="head"><span class="lab">Genel Kültür</span><input type="text" inputmode="decimal" id="tMyGK" aria-label="Genel Kültür netiniz"></div>
+      <input type="range" id="myGK" min="-15" max="60" step="0.25" value="50" aria-label="Genel Kültür neti">
+    </div>
+  </div>
+
+  <div id="paneDY" class="off">
+    <div class="ptab">
+      <div></div><div class="ph">Doğru</div><div class="ph">Yanlış</div>
+      <div class="pl">Genel Yetenek</div>
+      <input type="text" inputmode="numeric" id="dGY" value="50" aria-label="Genel Yetenek doğru sayısı">
+      <input type="text" inputmode="numeric" id="yGY" value="0" aria-label="Genel Yetenek yanlış sayısı">
+      <div class="pl">Genel Kültür</div>
+      <input type="text" inputmode="numeric" id="dGK" value="50" aria-label="Genel Kültür doğru sayısı">
+      <input type="text" inputmode="numeric" id="yGK" value="0" aria-label="Genel Kültür yanlış sayısı">
+    </div>
+    <p class="note" id="dyOut"></p>
+  </div>
+  <p class="err" id="err"></p>
+</section>
+
+<section class="i-out">
+  <h2>Dağılımdaki yeriniz</h2>
+  <div id="chart" style="margin-bottom:12px"></div>
+  <div class="grid g3">
+    <div class="cell"><div class="k">Tahminî sıralama</div><div class="v live" id="vRank">—</div></div>
+    <div class="cell"><div class="k" id="kBand">Puan aralığı (birinci her testte ±2 net)</div><div class="v" id="vBand">—</div></div>
+    <div class="cell"><div class="k">Net değişim oranı</div><div class="v" id="vEq">—</div></div>
+  </div>
+  <details class="adv">
+    <summary>Hesap ayrıntıları</summary>
+    <div class="body">
+      <div class="grid g4">
+        <div class="cell"><div class="k">z (Genel Yetenek)</div><div class="v" id="vzGY">—</div></div>
+        <div class="cell"><div class="k">z (Genel Kültür)</div><div class="v" id="vzGK">—</div></div>
+        <div class="cell"><div class="k">Standart puan (GY)</div><div class="v" id="vsGY">—</div></div>
+        <div class="cell"><div class="k">Standart puan (GK)</div><div class="v" id="vsGK">—</div></div>
+      </div>
+      <div class="grid g3">
+        <div class="cell"><div class="k">Ağırlıklı standart puan</div><div class="v" id="vASP">—</div></div>
+        <div class="cell"><div class="k">En yüksek ASP (B)</div><div class="v" id="vB">—</div></div>
+        <div class="cell"><div class="k">ASP standart sapması (S)</div><div class="v" id="vS">—</div></div>
+      </div>
+      <div class="grid g3">
+        <div class="cell"><div class="k">z (ASP)</div><div class="v" id="vz">—</div></div>
+        <div class="cell"><div class="k">Normal dağılım sıralaması</div><div class="v" id="vRankN">—</div></div>
+        <div class="cell"><div class="k">Tavan uzaklığı (B−50)/S</div><div class="v" id="vZmax">—</div></div>
+      </div>
+      <div class="steps" id="steps"></div>
+    </div>
+  </details>
+</section>
+
+<details class="adv i-adv" id="adv">
+  <summary>Gelişmiş ayarlar <span class="tag" id="advTag"></span></summary>
+  <div class="body">
+    <h3 style="margin-top:0">Sınav parametreleri</h3>
+    <div class="ptab">
+      <div></div><div class="ph">Genel Yetenek</div><div class="ph">Genel Kültür</div>
+      <div class="pl">Net ortalaması</div>
+      <input type="text" inputmode="decimal" id="mGY" aria-label="Genel Yetenek net ortalaması">
+      <input type="text" inputmode="decimal" id="mGK" aria-label="Genel Kültür net ortalaması">
+      <div class="pl">Standart sapma</div>
+      <input type="text" inputmode="decimal" id="sGY" aria-label="Genel Yetenek standart sapması">
+      <input type="text" inputmode="decimal" id="sGK" aria-label="Genel Kültür standart sapması">
+      <div class="pl">Aday sayısı</div>
+      <div class="wide"><input type="text" inputmode="numeric" id="nAday" aria-label="Aday sayısı"></div>
+      <div class="pl">Korelasyon (ρ)</div>
+      <div class="wide"><input type="text" inputmode="decimal" id="tRho" value="0,183" aria-label="Korelasyon katsayısı"></div>
+    </div>
+    <h3>Birincinin netleri</h3>
+    <div class="pair">
+      <span class="pl">GY</span><input type="text" inputmode="decimal" id="tTpGY" aria-label="Birincinin Genel Yetenek neti">
+      <span class="pl">GK</span><input type="text" inputmode="decimal" id="tTpGK" aria-label="Birincinin Genel Kültür neti">
+    </div>
+    <p class="note">Bu değerler yıl düğmesiyle birlikte otomatik gelir. Yalnızca resmî veriyi güncellemek veya farklı bir senaryo denemek istiyorsanız elle değiştirin.</p>
+  </div>
+</details>
+
+</div>
+
+<section>
+  <h2>Yıllara göre karşılaştırma</h2>
+  <div class="scroll"><table id="ytab"></table></div>
+  <p class="note">Aynı netlerin her yılın kendi ortalama, standart sapma ve birinci netleriyle ne getireceğini gösterir.</p>
+</section>
+
+
+<details class="adv">
+  <summary>Veri, yöntem ve kaynaklar</summary>
+  <div class="body">
+    <p class="note"><b>Hesap zinciri.</b> SP = 50 + 10(net − ortalama)/sapma &nbsp;→&nbsp; ASP = ağırlıklı SP toplamı &nbsp;→&nbsp; Puan = 70 + 30[2(ASP − 50) − S] ÷ [2(B − 50) − S], burada S = 10√(w₁² + w₂² + 2w₁w₂ρ).</p>
+    <p class="note"><b>Sıralama B'den bağımsızdır.</b> Sıralama z = (ASP − 50)/S değerinden okunur ve bu ifadede B geçmez. Birincinin netlerini değiştirmek puanı değiştirir, sıralamayı değiştirmez.</p>
+    <p class="note"><b>Ölçülenler.</b> ρ = 0,183 ve 2024 için B = 88,0344, aşağıdaki 36 gerçek noktaya doğru uydurularak çözüldü: puan = 0,877473·ASP + 22,75218, R² = 0,99992, ortalama artık 0,06 puan. Sıralama eğrisi de bu noktalardan türetildi.</p>
+    <p class="note"><b>Tahmin olanlar.</b> 2026 ortalama ve sapmaları; 2024 dışındaki bütün yılların birinci netleri; gerçek değerler bunlardan sapabilir.</p>
+    <p class="note" style="margin-top:12px"><b>2024 KPSS Lisans — gerçek net, puan ve sıralama noktaları</b> (P3 puanı hesaplanan aday: 1.318.113)</p>
+    <div class="scroll"><table>
+      <thead><tr><th>GY net</th><th>GK net</th><th>P3 puanı</th><th>Sıralama</th></tr></thead>
+      <tbody><tr><td>55.25</td><td>54</td><td>99.93266</td><td>2</td></tr><tr><td>53.25</td><td>51.25</td><td>97.82252</td><td>9</td></tr><tr><td>47.25</td><td>53</td><td>95.5</td><td>97</td></tr><tr><td>48.25</td><td>49</td><td>94.45954</td><td>243</td></tr><tr><td>45.5</td><td>50.75</td><td>93.84854</td><td>390</td></tr><tr><td>42</td><td>53.25</td><td>93.17799</td><td>585</td></tr><tr><td>46</td><td>46.75</td><td>92.43431</td><td>959</td></tr><tr><td>47</td><td>46</td><td>92.19667</td><td>1.102</td></tr><tr><td>43</td><td>47.25</td><td>91.18195</td><td>1.932</td></tr><tr><td>42.25</td><td>43.25</td><td>89.03709</td><td>4.299</td></tr><tr><td>44</td><td>40.25</td><td>88.77216</td><td>5.264</td></tr><tr><td>44.25</td><td>40</td><td>88.68677</td><td>5.443</td></tr><tr><td>43.75</td><td>40</td><td>88.54724</td><td>5.745</td></tr><tr><td>34.75</td><td>49.75</td><td>88.20352</td><td>6.482</td></tr><tr><td>43</td><td>39</td><td>87.76857</td><td>7.503</td></tr><tr><td>37.25</td><td>43.25</td><td>86.72999</td><td>10.303</td></tr><tr><td>34</td><td>46</td><td>86.28706</td><td>11.749</td></tr><tr><td>33.25</td><td>45.5</td><td>85.47229</td><td>14.814</td></tr><tr><td>28.75</td><td>48.75</td><td>84.8713</td><td>17.406</td></tr><tr><td>36.5</td><td>39.5</td><td>84.814</td><td>17.677</td></tr><tr><td>31.5</td><td>44.25</td><td>84.34722</td><td>20.012</td></tr><tr><td>31.5</td><td>42.5</td><td>83.62317</td><td>24.090</td></tr><tr><td>35.75</td><td>34</td><td>82.17349</td><td>34.253</td></tr><tr><td>29.75</td><td>33.75</td><td>79.15158</td><td>66.772</td></tr><tr><td>19.5</td><td>43</td><td>77.99357</td><td>85.544</td></tr><tr><td>25.25</td><td>35.75</td><td>77.68701</td><td>91.265</td></tr><tr><td>39.75</td><td>13.75</td><td>75.74086</td><td>136.361</td></tr><tr><td>28</td><td>24.5</td><td>74.4736</td><td>174.559</td></tr><tr><td>19</td><td>29.25</td><td>72.06116</td><td>269.239</td></tr><tr><td>15.5</td><td>32.75</td><td>71.80706</td><td>280.921</td></tr><tr><td>9</td><td>38.25</td><td>70.92112</td><td>324.677</td></tr><tr><td>18.25</td><td>24.25</td><td>69.62752</td><td>395.005</td></tr><tr><td>6.5</td><td>34.75</td><td>68.25683</td><td>477.671</td></tr><tr><td>6</td><td>30.75</td><td>66.35889</td><td>606.199</td></tr><tr><td>13.5</td><td>14</td><td>63.07656</td><td>856.822</td></tr><tr><td>11</td><td>8.75</td><td>59.68815</td><td>1.112.639</td></tr></tbody>
+    </table></div>
+  </div>
+</details>
+
+<script type="application/json" id="kaynak-veri">
+{
+ "baslik": "KPSS Puan Hesaplayıcı — kaynak veri ve yöntem",
+ "surum": 8,
+ "guncelleme": "2026-10-02",
+ "formul": {
+  "1_standart_puan": "SP = 50 + 10*(net - ortalama)/standart_sapma",
+  "2_asp": "ASP = wGY*SP_GY + wGK*SP_GK",
+  "3_S": "S = 10*sqrt(wGY^2 + wGK^2 + 2*wGY*wGK*rho)",
+  "4_puan": "KPSS = 70 + 30*[2*(ASP-50) - S] / [2*(B-50) - S]",
+  "agirliklar": {
+   "P1": [
+    0.7,
+    0.3
+   ],
+   "P2": [
+    0.6,
+    0.4
+   ],
+   "P3": [
+    0.5,
+    0.5
+   ]
+  },
+  "X": "ASP ortalaması, tanım gereği 50",
+  "B": "sınavdaki en yüksek ASP; ÖSYM açıklamaz",
+  "baraj": "Bir testten en az 1 ham puanı olmayan adaya o testin standart puanı hesaplanmaz; puan türü oluşmaz.",
+  "siralama": "z = (ASP-50)/S. B sıralamayı ETKİLEMEZ, yalnızca puan ölçeğini belirler."
+ },
+ "yillar": [
+  {
+   "yil": 2018,
+   "gy": [
+    23.506,
+    10.312
+   ],
+   "gk": [
+    19.187,
+    10.262
+   ],
+   "n": 1171680,
+   "tepe": [
+    55,
+    58
+   ],
+   "kaynak_ortalama": "ÖSYM (doğru/net ayrımı yok, net kabul edildi)",
+   "kaynak_tepe": "kullanıcı tahmini"
+  },
+  {
+   "yil": 2019,
+   "gy": [
+    21.44,
+    8.678
+   ],
+   "gk": [
+    21.84,
+    10.629
+   ],
+   "n": 608263,
+   "tepe": [
+    53,
+    56
+   ],
+   "kaynak_ortalama": "ÖSYM (doğru/net ayrımı yok, net kabul edildi)",
+   "kaynak_tepe": "kullanıcı tahmini"
+  },
+  {
+   "yil": 2020,
+   "gy": [
+    19.393,
+    9.211
+   ],
+   "gk": [
+    19.451,
+    11.449
+   ],
+   "n": 1297429,
+   "tepe": [
+    56,
+    59
+   ],
+   "kaynak_ortalama": "ÖSYM (doğru/net ayrımı yok, net kabul edildi)",
+   "kaynak_tepe": "kullanıcı tahmini"
+  },
+  {
+   "yil": 2021,
+   "gy": [
+    20.513,
+    8.563
+   ],
+   "gk": [
+    22.215,
+    11.496
+   ],
+   "n": 650664,
+   "tepe": [
+    55,
+    57
+   ],
+   "kaynak_ortalama": "ÖSYM net",
+   "kaynak_tepe": "kullanıcı tahmini",
+   "uyari": "doğru/net sapma yönleri sıra dışı, PDF'ten doğrulanmalı"
+  },
+  {
+   "yil": 2022,
+   "gy": [
+    20.435,
+    9.45
+   ],
+   "gk": [
+    18.884,
+    10.723
+   ],
+   "n": 1175584,
+   "tepe": [
+    57,
+    59
+   ],
+   "kaynak_ortalama": "ÖSYM net",
+   "kaynak_tepe": "kullanıcı tahmini"
+  },
+  {
+   "yil": 2023,
+   "gy": [
+    15.944,
+    7.553
+   ],
+   "gk": [
+    16.954,
+    9.681
+   ],
+   "n": 782640,
+   "tepe": [
+    51,
+    52
+   ],
+   "kaynak_ortalama": "ÖSYM net",
+   "kaynak_tepe": "kullanıcı tahmini"
+  },
+  {
+   "yil": 2024,
+   "gy": [
+    16.73,
+    9.098
+   ],
+   "gk": [
+    18.861,
+    10.517
+   ],
+   "n": 1336745,
+   "tepe": [
+    54.25,
+    55.5
+   ],
+   "kaynak_ortalama": "ÖSYM net",
+   "kaynak_tepe": "ÖLÇÜLDÜ — B=88.0344 çözümünden",
+   "p3_aday": 1318113
+  },
+  {
+   "yil": 2025,
+   "gy": [
+    17.42994,
+    9.10836
+   ],
+   "gk": [
+    14.30211,
+    9.25736
+   ],
+   "n": 310704,
+   "tepe": [
+    54,
+    56
+   ],
+   "kaynak_ortalama": "ÖSYM net",
+   "kaynak_tepe": "kullanıcı tahmini",
+   "uyari": "yalnız A grubu oturumu, B grubu kıyası için uygun değil"
+  },
+  {
+   "yil": 2026,
+   "gy": [
+    15.5,
+    9.6
+   ],
+   "gk": [
+    17.0,
+    11.6
+   ],
+   "n": 1553000,
+   "tepe": [
+    58,
+    56.25
+   ],
+   "band": 2,
+   "kaynak_ortalama": "TAHMİN",
+   "kaynak_tepe": "Kullanıcı güncellemesi (2 Ekim 2026): birinci netleri 58 / 56,25",
+   "gerekce": "2024 tabanlı. BİRİNCİ NETLERİ GÜNCEL (2 Ekim revizyonu, 58,75/54,5 → 58/56,25); aşağıdaki açıklama 21 Eylül değerlerine aittir. BİRİNCİ NETLERİ (21 Eylül revizyonu, 57/52 → 58,75/54,5): r/KPSS_Lisans'ta bir bilgisayar mühendisi adayının birinci ağızdan beyanı, 113,25 net. Önceki tepe iddialarından farkı: sınavdan yıllar öncesine uzanan tutarlı bir hesap geçmişi var; netler aritmetik olarak tutarlı (GY'de tek yanlış = 58,75; GK 55 doğru 2 yanlış = 54,5); belirsizliğini de doğru aritmetikle veriyor ('112 ya da 113,25' = tek sorunun doğru/yanlış farkı); 7 Ekim'de sonucunu paylaşacağını söylüyor. Doğruysa bu değer B için ALT SINIRDIR: gerçek birinci en az bu kadar, belki daha yüksek. Aynı kişinin beyanına göre 104-107 net yapan bir aday daha var. Bant her testte ±2 net (toplamda ±4) olarak ayarlandı (2 Ekim 2026; önceden ±4) ve 60 netle sınırlanıyor: alt uç beyanın yanlış çıkması, üst uç başka birinin daha yüksek yapması senaryosudur. Önceki 57/52 değeri, doğrulanamayan 107,5 net forum beyanı ile 2024 forum sapması düzeltmesinden türetilmişti. ORTALAMALAR kısıldı (matematik zaman baskısı). SAPMALAR artırıldı; ölçülen mekanizma zaman tahsisi kayması: matematiği erken bırakıp genel kültüre taze giren ile oraya 15 dakika kala varan aday, aynı bilgiyle farklı net yapıyor (Ekşi başlığında 26 aday genel kültürü kolay bulduğunu, 16 aday ise ona vakit kalmadığını yazmış). Aday sayısı 2024'ün başvuru-istatistik oranıyla ölçeklendi (1.708.329 başvuru)."
+  }
+ ],
+ "cozulen_2024": {
+  "rho": 0.183,
+  "S": 7.6906,
+  "B": 88.0344,
+  "R2": 0.99992228,
+  "yontem": "Puan ASP'de doğrusal olduğundan 36 gerçek (ASP, puan) noktasına doğru uyduruldu: puan = 0.877473*ASP + 22.75218. Eğimden D=60/p, oradan S ve B çözüldü.",
+  "artik": "ortalama 0.06 puan, en büyük 0.35 puan",
+  "not": "rho 0.45 varsayılıyordu, ölçülen 0.183. 2024 tepesi 52/54 sanılıyordu, gerçek ~109.75 toplam net."
+ },
+ "kalibrasyon_2024": {
+  "aciklama": "Gerçek net-puan-sıralama noktaları. Sıralama eğrisinin kaynağı.",
+  "p3_aday_sayisi": 1318113,
+  "sutunlar": [
+   "gy_net",
+   "gk_net",
+   "p3_puan",
+   "siralama"
+  ],
+  "noktalar": [
+   [
+    55.25,
+    54.0,
+    99.93266,
+    2
+   ],
+   [
+    53.25,
+    51.25,
+    97.82252,
+    9
+   ],
+   [
+    47.25,
+    53.0,
+    95.5,
+    97
+   ],
+   [
+    48.25,
+    49.0,
+    94.45954,
+    243
+   ],
+   [
+    45.5,
+    50.75,
+    93.84854,
+    390
+   ],
+   [
+    42.0,
+    53.25,
+    93.17799,
+    585
+   ],
+   [
+    46.0,
+    46.75,
+    92.43431,
+    959
+   ],
+   [
+    47.0,
+    46.0,
+    92.19667,
+    1102
+   ],
+   [
+    43.0,
+    47.25,
+    91.18195,
+    1932
+   ],
+   [
+    42.25,
+    43.25,
+    89.03709,
+    4299
+   ],
+   [
+    44.0,
+    40.25,
+    88.77216,
+    5264
+   ],
+   [
+    44.25,
+    40.0,
+    88.68677,
+    5443
+   ],
+   [
+    43.75,
+    40.0,
+    88.54724,
+    5745
+   ],
+   [
+    34.75,
+    49.75,
+    88.20352,
+    6482
+   ],
+   [
+    43.0,
+    39.0,
+    87.76857,
+    7503
+   ],
+   [
+    37.25,
+    43.25,
+    86.72999,
+    10303
+   ],
+   [
+    34.0,
+    46.0,
+    86.28706,
+    11749
+   ],
+   [
+    33.25,
+    45.5,
+    85.47229,
+    14814
+   ],
+   [
+    28.75,
+    48.75,
+    84.8713,
+    17406
+   ],
+   [
+    36.5,
+    39.5,
+    84.814,
+    17677
+   ],
+   [
+    31.5,
+    44.25,
+    84.34722,
+    20012
+   ],
+   [
+    31.5,
+    42.5,
+    83.62317,
+    24090
+   ],
+   [
+    35.75,
+    34.0,
+    82.17349,
+    34253
+   ],
+   [
+    29.75,
+    33.75,
+    79.15158,
+    66772
+   ],
+   [
+    19.5,
+    43.0,
+    77.99357,
+    85544
+   ],
+   [
+    25.25,
+    35.75,
+    77.68701,
+    91265
+   ],
+   [
+    39.75,
+    13.75,
+    75.74086,
+    136361
+   ],
+   [
+    28.0,
+    24.5,
+    74.4736,
+    174559
+   ],
+   [
+    19.0,
+    29.25,
+    72.06116,
+    269239
+   ],
+   [
+    15.5,
+    32.75,
+    71.80706,
+    280921
+   ],
+   [
+    9.0,
+    38.25,
+    70.92112,
+    324677
+   ],
+   [
+    18.25,
+    24.25,
+    69.62752,
+    395005
+   ],
+   [
+    6.5,
+    34.75,
+    68.25683,
+    477671
+   ],
+   [
+    6.0,
+    30.75,
+    66.35889,
+    606199
+   ],
+   [
+    13.5,
+    14.0,
+    63.07656,
+    856822
+   ],
+   [
+    11.0,
+    8.75,
+    59.68815,
+    1112639
+   ]
+  ]
+ },
+ "siralama_egrisi": {
+  "aciklama": "[z, log10(üstteki oran)] — 2024'ten türetildi. z arttıkça normal dağılım iyimserleşir: z=2 1.0x, z=2.5 4x, z=3+ 7-13x.",
+  "tablo": [
+   [
+    -1.035,
+    -0.0736
+   ],
+   [
+    -0.531,
+    -0.1871
+   ],
+   [
+    -0.032,
+    -0.3373
+   ],
+   [
+    0.251,
+    -0.4408
+   ],
+   [
+    0.442,
+    -0.5234
+   ],
+   [
+    0.646,
+    -0.6085
+   ],
+   [
+    0.771,
+    -0.6714
+   ],
+   [
+    0.804,
+    -0.6898
+   ],
+   [
+    1.154,
+    -0.878
+   ],
+   [
+    1.329,
+    -0.9853
+   ],
+   [
+    1.653,
+    -1.1596
+   ],
+   [
+    1.69,
+    -1.1878
+   ],
+   [
+    1.851,
+    -1.2954
+   ],
+   [
+    2.295,
+    -1.5853
+   ],
+   [
+    2.517,
+    -1.7381
+   ],
+   [
+    2.625,
+    -1.8187
+   ],
+   [
+    2.689,
+    -1.8725
+   ],
+   [
+    2.707,
+    -1.8793
+   ],
+   [
+    2.827,
+    -1.9493
+   ],
+   [
+    2.912,
+    -2.05
+   ],
+   [
+    2.974,
+    -2.107
+   ],
+   [
+    3.122,
+    -2.2447
+   ],
+   [
+    3.197,
+    -2.3082
+   ],
+   [
+    3.238,
+    -2.3607
+   ],
+   [
+    3.271,
+    -2.3986
+   ],
+   [
+    3.331,
+    -2.4866
+   ],
+   [
+    3.632,
+    -2.8339
+   ],
+   [
+    3.816,
+    -3.1381
+   ],
+   [
+    3.932,
+    -3.3528
+   ],
+   [
+    4.027,
+    -3.5289
+   ],
+   [
+    4.116,
+    -3.7343
+   ],
+   [
+    4.291,
+    -4.1332
+   ],
+   [
+    4.612,
+    -5.1657
+   ],
+   [
+    4.925,
+    -5.8189
+   ]
+  ]
+ },
+ "acik_konular": [
+  "2026 resmî verisi 7 Ekim 2026'da açıklanıyor; dört kutu güncellenecek.",
+  "2024 dışındaki yılların birinci netleri tahmin. 2024'ünki 3.75 net saptı, ötekiler de sapabilir.",
+  "Herhangi bir yılın tek bir sonuç belgesi (net + P1/P2/P3 puan + sıralama) o yılın rho ve B değerini çözmeye yeter.",
+  "Sıralama eğrisi 2024 biçimini taşıyor; diğer yıllara uygulanışı yaklaşık.",
+  "2026 birinci netleri 2 Ekim 2026'da 58 / 56,25 olarak güncellendi; bant 2 Ekim 2026'da her testte ±4 netten ±2 nete (toplamda ±4) indirildi.",
+  "Ekşi ve forum verisi tepe hakkında zayıf kanıttır: B, 1,7 milyon kişinin maksimumudur, forumlar ise 99. yüzdeliği gösterir."
+ ]
+}
+</script>
+
+<footer>
+  <p>Ortalama ve standart sapma değerleri, ÖSYM'nin her sınav sonrası yayımladığı testlere ait sayısal bilgiler tablolarından alınmıştır ve net sayısı üzerinden verilmiştir. 2018–2020 tablolarında doğru–net ayrımı bulunmadığından o yılların değerleri net kabul edilmiştir. 2025 yalnız A grubu oturumudur; aday havuzu küçük ve seçilmiştir. 2026 satırı tahminîdir, resmî veri açıklandığında kutuları güncelleyiniz.</p>
+  <p>Formüldeki B değeri ÖSYM tarafından açıklanmaz, birincinin netlerinden türetilir ve sonucu en çok etkileyen belirsizlik kaynağıdır; puan aralığı sütunu bu belirsizliğin büyüklüğünü gösterir; 2026 için bu bant, birincinin GY ve GK netlerinin her birinde ±2 net (toplamda ±4; 60 netle sınırlı) olarak tutulmaktadır; o yılın tepesi 58 / 56,25 net olarak alınmıştır. Korelasyon katsayısı açıklanmaz; buradaki 0,183 değeri 2024 sonuçlarından geriye doğru çözülerek ölçülmüştür. 2024 için girilen birinci netleri de tahmin değil, aynı çözümden elde edilen B = 88,03 değerine karşılık gelir; diğer yılların birinci netleri tahminîdir. Tahminî sıralama, 2024 KPSS Lisans sonuçlarından derlenen 36 gerçek net–puan–sıralama noktasına dayanır. Normal dağılım varsayımı ortalamanın 1 standart sapma üstüne kadar doğru sonuç verir, üzerinde giderek iyimserleşir: 2,5 standart sapmada yaklaşık 4, 3 standart sapmada 7–13 kat. Uygulama bu ölçülen eğriyi kullanır, normal dağılımın verdiği sayı ise hesap ayrıntılarında ayrıca gösterilir. Eğri 2024 dağılımının biçimini diğer yıllara taşıdığından, 2024 dışındaki yıllar için yaklaşıktır.</p>
+  <p>Bir testten en az 1 ham puanı (1 neti) bulunmayan aday, o test için yapılan hesaplamalara alınmaz ve kendisine o testin standart puanı hesaplanmaz. Bir puan türünün oluşabilmesi için o türe giren testlerin tümünden standart puan gerektiğinden, Genel Yetenek veya Genel Kültür testlerinden birinde 1 netin altında kalan adayın KPSS puanı hesaplanmaz.</p>
+  <p>Sonuç tahminîdir. Kesin puanı ÖSYM hesaplar.</p>
+  <p style="margin-top:14px;text-align:center;font-weight:600;letter-spacing:.04em">Alparslonides</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var YEARS = {
+  2018:{top:[55,58], gy:[23.506,10.312], gk:[19.187,10.262], n:1171680},
+  2019:{top:[53,56], gy:[21.440,8.678],  gk:[21.840,10.629], n:608263},
+  2020:{top:[56,59], gy:[19.393,9.211],  gk:[19.451,11.449], n:1297429},
+  2021:{top:[55,57], gy:[20.513,8.563],  gk:[22.215,11.496], n:650664},
+  2022:{top:[57,59], gy:[20.435,9.450],  gk:[18.884,10.723], n:1175584},
+  2023:{top:[51,52], gy:[15.944,7.553],  gk:[16.954,9.681],  n:782640},
+  2024:{top:[54.25,55.5], gy:[16.730,9.098],  gk:[18.861,10.517], n:1336745},
+  2025:{top:[54,56], gy:[17.42994,9.10836], gk:[14.30211,9.25736], n:310704},
+  2026:{top:[58,56.25], gy:[15.5,9.6], gk:[17.0,11.6], n:1553000, est:true, band:2}
+};
+var SURV=[[-1.035,-0.0736],[-0.531,-0.1871],[-0.032,-0.3373],[0.251,-0.4408],[0.442,-0.5234],[0.646,-0.6085],[0.771,-0.6714],[0.804,-0.6898],[1.154,-0.8780],[1.329,-0.9853],[1.653,-1.1596],[1.690,-1.1878],[1.851,-1.2954],[2.295,-1.5853],[2.517,-1.7381],[2.625,-1.8187],[2.689,-1.8725],[2.707,-1.8793],[2.827,-1.9493],[2.912,-2.0500],[2.974,-2.1070],[3.122,-2.2447],[3.197,-2.3082],[3.238,-2.3607],[3.271,-2.3986],[3.331,-2.4866],[3.632,-2.8339],[3.816,-3.1381],[3.932,-3.3528],[4.027,-3.5289],[4.116,-3.7343],[4.291,-4.1332],[4.612,-5.1657],[4.925,-5.8189]];
+function empUst(z){
+  var n = SURV.length;
+  if(z <= SURV[0][0]) return 1 - cdf(z);
+  if(z >= SURV[n-1][0]){
+    var a = SURV[n-2], b = SURV[n-1];
+    var eg = (b[1]-a[1])/(b[0]-a[0]);
+    return Math.pow(10, b[1] + eg*(z-b[0]));
+  }
+  for(var i=1;i<n;i++){
+    if(z <= SURV[i][0]){
+      var q = SURV[i-1], w = SURV[i];
+      var t = (z-q[0])/(w[0]-q[0]);
+      return Math.pow(10, q[1] + t*(w[1]-q[1]));
+    }
+  }
+  return 1 - cdf(z);
+}
+var W = {p3:[0.5,0.5], p2:[0.6,0.4], p1:[0.7,0.3]};
+var curBand = 2;
+var LBL = {p3:"P3", p2:"P2", p1:"P1"};
+
+function $(id){return document.getElementById(id);}
+function parseNum(s){
+  s = String(s).trim();
+  if(!s) return NaN;
+  if(s.indexOf(",") >= 0) s = s.replace(/\./g,"").replace(",",".");
+  return parseFloat(s);
+}
+function parseCount(s){
+  s = String(s).replace(/[^\d]/g,"");
+  return s ? parseInt(s,10) : NaN;
+}
+function fx(x,d){ return isFinite(x) ? x.toFixed(d).replace(".",",") : "—"; }
+function trim0(s){ return s.indexOf(",") < 0 ? s : s.replace(/0+$/,"").replace(/,$/,""); }
+function fn(x,d){ return trim0(fx(x,d)); }
+function fint(x){ return isFinite(x) ? Math.round(x).toLocaleString("tr-TR") : "—"; }
+function cdf(z){
+  var t = 1/(1+0.2316419*Math.abs(z));
+  var d = 0.3989422804014327*Math.exp(-z*z/2);
+  var p = d*t*(0.319381530+t*(-0.356563782+t*(1.781477937+t*(-1.821255978+t*1.330274429))));
+  return z > 0 ? 1-p : p;
+}
+function spOf(net,m,s){ return 50 + 10*(net-m)/s; }
+function aspOf(a,b,w,P){ return w[0]*spOf(a,P.mgy,P.sgy) + w[1]*spOf(b,P.mgk,P.sgk); }
+function puanOf(A,B,S){
+  if(A >= B) return 100;
+  var d = 2*(B-50) - S;
+  if(d <= 0) return NaN;
+  var v = 70 + 30*(2*(A-50) - S)/d;
+  return v > 100 ? 100 : v;
+}
+function sOf(w,rho){ return 10*Math.sqrt(w[0]*w[0] + w[1]*w[1] + 2*w[0]*w[1]*rho); }
+
+var yearsBox = $("years"), currentYear = null, dyMode = false;
+Object.keys(YEARS).forEach(function(y){
+  var b = document.createElement("button");
+  b.className = "yr" + (YEARS[y].est ? " est" : "");
+  b.type = "button"; b.textContent = y;
+  b.setAttribute("aria-pressed","false");
+  b.addEventListener("click", function(){ loadYear(y); });
+  yearsBox.appendChild(b);
+});
+
+function loadYear(y){
+  var d = YEARS[y];
+  $("mGY").value = fn(d.gy[0],5);
+  $("sGY").value = fn(d.gy[1],5);
+  $("mGK").value = fn(d.gk[0],5);
+  $("sGK").value = fn(d.gk[1],5);
+  $("nAday").value = d.n.toLocaleString("tr-TR");
+  $("tTpGY").value = fn(d.top[0],2);
+  $("tTpGK").value = fn(d.top[1],2);
+  Array.prototype.forEach.call(yearsBox.children, function(b){
+    b.setAttribute("aria-pressed", b.textContent === String(y) ? "true" : "false");
+  });
+  curBand = d.band || 2;
+  $("kBand").textContent = "Puan aralığı (birinci her testte ±" + fn(curBand,0) + " net)";
+  currentYear = y;
+  $("advTag").textContent = "";
+  $("meta").textContent = fint(d.n) + " aday";
+  calc();
+}
+function markEdited(){
+  $("advTag").textContent = "· değiştirildi";
+  if(currentYear === null) return;
+  Array.prototype.forEach.call(yearsBox.children, function(b){ b.setAttribute("aria-pressed","false"); });
+  currentYear = null;
+}
+function syncMeta(){
+  var n = parseCount($("nAday").value);
+  $("meta").textContent = isFinite(n) && n > 0 ? fint(n) + " aday" : "";
+}
+
+function bindPair(slider, box){
+  var s = $(slider), t = $(box);
+  t.value = fn(parseFloat(s.value),2);
+  s.addEventListener("input", function(){ t.value = fn(parseFloat(s.value),2); calc(); });
+  t.addEventListener("input", function(){
+    var v = parseNum(t.value);
+    if(isFinite(v)){ s.value = v; calc(); }
+  });
+  t.addEventListener("blur", function(){ t.value = fn(parseFloat(s.value),2); });
+}
+bindPair("myGY","tMyGY");
+bindPair("myGK","tMyGK");
+
+function setMode(dy){
+  dyMode = dy;
+  $("modeNet").setAttribute("aria-pressed", dy ? "false" : "true");
+  $("modeDY").setAttribute("aria-pressed", dy ? "true" : "false");
+  $("paneNet").className = dy ? "off" : "";
+  $("paneDY").className = dy ? "" : "off";
+  calc();
+}
+$("modeNet").addEventListener("click", function(){ setMode(false); });
+$("modeDY").addEventListener("click", function(){ setMode(true); });
+
+function readDY(){
+  var out = {ok:true, msg:""}, parts = [];
+  [["dGY","yGY","myGY","tMyGY","Genel Yetenek"],["dGK","yGK","myGK","tMyGK","Genel Kültür"]].forEach(function(r){
+    var d = parseNum($(r[0]).value), y = parseNum($(r[1]).value);
+    if(!isFinite(d) || !isFinite(y) || d < 0 || y < 0){ out.ok = false; out.msg = "Doğru ve yanlış sayıları sıfır veya daha büyük olmalıdır."; return; }
+    if(d + y > 60){ out.ok = false; out.msg = r[4] + " testinde doğru ve yanlış toplamı 60'ı aşamaz."; return; }
+    var net = d - y/4;
+    $(r[2]).value = net;
+    $(r[3]).value = fn(net,2);
+    parts.push(r[4] + " " + fn(net,2) + " net");
+  });
+  $("dyOut").innerHTML = out.ok ? "<b>" + parts.join(" · ") + "</b>" : out.msg;
+  return out.ok;
+}
+["dGY","yGY","dGK","yGK"].forEach(function(id){ $(id).addEventListener("input", calc); });
+
+["mGY","sGY","mGK","sGK","nAday","tTpGY","tTpGK"].forEach(function(id){
+  $(id).addEventListener("input", function(){ markEdited(); syncMeta(); calc(); });
+});
+$("tRho").addEventListener("input", calc);
+$("ptur").addEventListener("change", calc);
+
+function calc(){
+  var P = {mgy:parseNum($("mGY").value), sgy:parseNum($("sGY").value),
+           mgk:parseNum($("mGK").value), sgk:parseNum($("sGK").value)};
+  var n = parseCount($("nAday").value);
+  var tpGY = parseNum($("tTpGY").value), tpGK = parseNum($("tTpGK").value);
+  var rho = parseNum($("tRho").value);
+  if(!isFinite(rho) || rho < 0 || rho > 0.99) rho = 0.183;
+
+  if(!isFinite(P.mgy) || !isFinite(P.mgk)){ $("err").textContent = "Ortalama kutularına sayı giriniz."; return; }
+  if(!(P.sgy > 0) || !(P.sgk > 0)){ $("err").textContent = "Standart sapmalar sıfırdan büyük olmalıdır."; return; }
+  if(!isFinite(tpGY) || !isFinite(tpGK)){ $("err").textContent = "Birincinin netlerini giriniz."; return; }
+  if(dyMode && !readDY()){ $("err").textContent = ""; return; }
+  $("err").textContent = "";
+
+  var w = W[$("ptur").value], S = sOf(w,rho);
+  var myGY = parseFloat($("myGY").value), myGK = parseFloat($("myGK").value);
+  var okGY = myGY >= 1, okGK = myGK >= 1;
+
+  var py = spOf(myGY,P.mgy,P.sgy), pk = spOf(myGK,P.mgk,P.sgk);
+  var asp = w[0]*py + w[1]*pk;
+  var B = aspOf(tpGY,tpGK,w,P);
+  var score = puanOf(asp,B,S);
+
+  $("vzGY").textContent = okGY ? fx((myGY-P.mgy)/P.sgy,3) : "—";
+  $("vzGK").textContent = okGK ? fx((myGK-P.mgk)/P.sgk,3) : "—";
+  $("vsGY").textContent = okGY ? fx(py,2) : "—";
+  $("vsGK").textContent = okGK ? fx(pk,2) : "—";
+  $("vB").textContent = fx(B,2);
+  $("vS").textContent = fx(S,3);
+  $("vZmax").textContent = fx((B-50)/S,2);
+
+  var vGY = w[0]*10/P.sgy, vGK = w[1]*10/P.sgk, r = vGY/vGK;
+  $("vEq").textContent = r >= 1 ? "1 GY = " + fx(r,2) + " GK" : "1 GK = " + fx(1/r,2) + " GY";
+
+  years(w,rho,myGY,myGK,okGY && okGK);
+
+  if(!okGY || !okGK){
+    var hangi = (!okGY && !okGK) ? "Her iki testte de netiniz"
+              : (!okGY ? "Genel Yetenek netiniz" : "Genel Kültür netiniz");
+    $("vASP").textContent = "—"; $("vRank").textContent = "—";
+    $("vz").textContent = "—"; $("vRankN").textContent = "—";
+    $("vBand").textContent = "—"; $("score").textContent = "—";
+    $("scoreSub").textContent = hangi + " 1'in altında. ÖSYM kuralı gereği bu testten standart puan oluşmaz, dolayısıyla KPSS puanı hesaplanmaz.";
+    $("steps").innerHTML = '<div><b>Hesap yapılmadı</b><br>' + hangi +
+      " 1 ham puanın altında kaldığı için o testin standart puanı üretilmez.</div>";
+    draw(NaN,B,S,NaN,NaN);
+    return;
+  }
+
+  var cl = function(x){ return Math.max(0, Math.min(60, x)); };
+  var sHi = puanOf(asp, aspOf(cl(tpGY-curBand),cl(tpGK-curBand),w,P), S);
+  var sLo = puanOf(asp, aspOf(cl(tpGY+curBand),cl(tpGK+curBand),w,P), S);
+  $("vBand").textContent = (isFinite(sLo) && isFinite(sHi)) ? fx(sLo,1) + " – " + fx(sHi,1) : "—";
+
+  $("vASP").textContent = fx(asp,2);
+  var zasp = (asp-50)/S, above = 1 - cdf(zasp), emp = empUst(zasp);
+  $("vRank").textContent = (isFinite(n) && n > 0) ? fint(Math.max(1, emp*n)) : "—";
+  $("vz").textContent = fx(zasp,3);
+  $("vRankN").textContent = (isFinite(n) && n > 0) ? fint(Math.max(1, above*n)) : "—";
+  $("score").textContent = isFinite(score) ? fx(score,2) : "—";
+
+  if(!isFinite(score)){
+    $("scoreSub").textContent = "Birincinin netleri ortalamaya çok yakın; formül sonuç vermiyor.";
+  } else if(asp >= B){
+    $("scoreSub").textContent = "Netleriniz birincininkine eşit veya üstünde. En yüksek ASP daima 100 alır.";
+  } else {
+    var yon = zasp >= 0 ? "üzerinde" : "altında";
+    var dil = emp <= 0.5 ? "Üst %" + fx(emp*100,3) : "Alt %" + fx((1-emp)*100,2);
+    $("scoreSub").textContent = LBL[$("ptur").value] + " · Ortalamanın " + fx(Math.abs(zasp),2)
+      + " standart sapma " + yon + " · " + dil;
+  }
+
+  steps(P,myGY,myGK,py,pk,w,asp,B,S,score);
+  draw(asp,B,S,sLo,sHi);
+}
+
+function years(w,rho,myGY,myGK,ok){
+  var S = sOf(w,rho);
+  var h = "<thead><tr><th>Yıl</th><th>GY ort.</th><th>GK ort.</th><th>Birinci</th><th>B</th><th>ASP</th><th>Puan</th></tr></thead><tbody>";
+  Object.keys(YEARS).forEach(function(y){
+    var d = YEARS[y];
+    var P = {mgy:d.gy[0], sgy:d.gy[1], mgk:d.gk[0], sgk:d.gk[1]};
+    var A = aspOf(myGY,myGK,w,P), B = aspOf(d.top[0],d.top[1],w,P);
+    var s = ok ? puanOf(A,B,S) : NaN;
+    h += '<tr' + (String(y) === String(currentYear) ? ' class="on"' : '') + '>'
+       + "<td>" + y + (d.est ? " *" : "") + "</td>"
+       + "<td>" + fx(d.gy[0],2) + "</td><td>" + fx(d.gk[0],2) + "</td>"
+       + "<td>" + fn(d.top[0],2) + " / " + fn(d.top[1],2) + "</td>"
+       + "<td>" + fx(B,2) + "</td><td>" + (ok ? fx(A,2) : "—") + "</td>"
+       + '<td class="sc">' + (isFinite(s) ? fx(s,2) : "—") + "</td></tr>";
+  });
+  $("ytab").innerHTML = h + "</tbody>";
+}
+
+function steps(P,myGY,myGK,py,pk,w,asp,B,S,score){
+  var zy = (myGY-P.mgy)/P.sgy, zk = (myGK-P.mgk)/P.sgk;
+  var num = 2*(asp-50) - S, den = 2*(B-50) - S;
+  var h = "";
+  h += '<div><b>1 · z skorları</b><span class="eq">z(GY) = (' + fx(myGY,2) + " − " + fx(P.mgy,3) + ") ÷ " + fx(P.sgy,3) + " = " + fx(zy,4) + '</span>'
+     + '<span class="eq">z(GK) = (' + fx(myGK,2) + " − " + fx(P.mgk,3) + ") ÷ " + fx(P.sgk,3) + " = " + fx(zk,4) + '</span></div>';
+  h += '<div><b>2 · Standart puanlar (10z + 50)</b><span class="eq">SP(GY) = ' + fx(py,3) + "   ·   SP(GK) = " + fx(pk,3) + '</span></div>';
+  h += '<div><b>3 · Ağırlıklı standart puan</b><span class="eq">ASP = ' + fx(w[0],1) + " × " + fx(py,3) + " + " + fx(w[1],1) + " × " + fx(pk,3) + " = " + fx(asp,4) + '</span></div>';
+  h += '<div><b>4 · Dağılım parametreleri</b><span class="eq">X = 50   ·   S = ' + fx(S,4) + "   ·   B = " + fx(B,4) + '</span></div>';
+  h += '<div><b>5 · Yüzlük sisteme dönüşüm</b><span class="eq">70 + 30 × [2(ASP − X) − S] ÷ [2(B − X) − S]</span>'
+     + '<span class="eq">70 + 30 × ' + fx(num,4) + " ÷ " + fx(den,4) + " = " + (isFinite(score) ? fx(score,4) : "—") + '</span></div>';
+  $("steps").innerHTML = h;
+}
+
+function draw(asp,B,S,sLo,sHi){
+  var D = 2*(B-50) - S;
+  if(!(D > 0)){ $("chart").innerHTML = ""; return; }
+  var W = 680, base = 222, H = 130;
+  var toK = function(A){ return 70 + 30*(2*(A-50) - S)/D; };
+  var toA = function(k){ return 50 + ((k-70)/30*D + S)/2; };
+  var mk = toK(50), sk = 60/D*S;
+  var myK = isFinite(asp) ? Math.min(toK(asp),100) : NaN;
+
+  var loK = 45, hiK = 100;
+  if(isFinite(myK) && myK < loK + 4) loK = Math.floor((myK - 6)/5)*5;
+  var px = function(k){ return 46 + (Math.min(Math.max(k,loK),hiK) - loK)*(600/(hiK-loK)); };
+  var py = function(k){ return base - H*Math.exp(-Math.pow(k-mk,2)/(2*sk*sk)); };
+  function seg(a,b){
+    var st = (b-a)/140, d = "M" + px(a).toFixed(1) + " " + py(a).toFixed(1);
+    for(var i=1;i<=140;i++){ var v=a+st*i; d += "L"+px(v).toFixed(1)+" "+py(v).toFixed(1); }
+    return d;
+  }
+  function close(d,a,b){ return d + "L"+px(b).toFixed(1)+" "+base+"L"+px(a).toFixed(1)+" "+base+"Z"; }
+
+  var line = seg(loK,hiK);
+  var o = '<path class="c-area" d="' + close(line,loK,hiK) + '"/>';
+
+  if(isFinite(sLo) && isFinite(sHi) && sHi > sLo){
+    o += '<rect class="c-band" x="' + px(sLo).toFixed(1) + '" y="' + (base-H-8).toFixed(1)
+       + '" width="' + Math.max(2,(px(sHi)-px(sLo))).toFixed(1) + '" height="' + (H+8).toFixed(1) + '"/>';
+  }
+  if(isFinite(myK) && myK > loK){
+    o += '<path class="c-fill" d="' + close(seg(loK,myK),loK,myK) + '"/>';
+  }
+  [70,80,90].forEach(function(g){
+    if(g > loK && g < hiK) o += '<line class="c-guide" x1="' + px(g).toFixed(1) + '" y1="'
+      + py(g).toFixed(1) + '" x2="' + px(g).toFixed(1) + '" y2="' + base + '"/>';
+  });
+  o += '<path class="c-line" d="' + line + '"/>';
+
+  // üst eksen: ASP
+  var aLo = toA(loK), aHi = toA(hiK), tops = "";
+  for(var a = Math.ceil(aLo/10)*10; a <= aHi; a += 10){
+    tops += '<text class="c-tops" x="' + px(toK(a)).toFixed(1) + '" y="18" text-anchor="middle">' + a + '</text>';
+  }
+  o += '<line class="c-top" x1="34" y1="26" x2="' + (W-28) + '" y2="26"/>' + tops
+     + '<text class="c-tops" x="34" y="18">ASP</text>';
+
+  // ortalama
+  o += '<line class="c-mean" x1="' + px(mk).toFixed(1) + '" y1="' + py(mk).toFixed(1)
+     + '" x2="' + px(mk).toFixed(1) + '" y2="' + base + '"/>';
+  var mLab = py(mk) - 9;
+  if(isFinite(myK) && Math.abs(px(myK) - px(mk)) < 110) mLab = py(mk) - 26;
+  o += '<text class="c-lbl" x="' + px(mk).toFixed(1) + '" y="' + mLab.toFixed(1)
+     + '" text-anchor="middle">ortalama ' + fx(mk,1) + '</text>';
+
+  // tavan
+  o += '<line class="c-b" x1="' + px(100).toFixed(1) + '" y1="' + (base-22) + '" x2="' + px(100).toFixed(1) + '" y2="' + base + '"/>'
+     + '<text class="c-btx" x="' + (px(100)-4).toFixed(1) + '" y="' + (base-28) + '" text-anchor="end">birinci 100</text>';
+
+  // siz
+  if(isFinite(myK)){
+    o += '<line class="c-me" x1="' + px(myK).toFixed(1) + '" y1="' + py(myK).toFixed(1)
+       + '" x2="' + px(myK).toFixed(1) + '" y2="' + base + '"/>'
+       + '<circle class="c-dot" cx="' + px(myK).toFixed(1) + '" cy="' + py(myK).toFixed(1) + '" r="4.5"/>'
+       + '<text class="c-metx" x="' + px(myK).toFixed(1) + '" y="' + (py(myK)-10).toFixed(1)
+       + '" text-anchor="middle">Siz ' + fx(myK,1) + '</text>';
+  }
+
+  o += '<line class="c-axis" x1="34" y1="' + base + '" x2="' + (W-28) + '" y2="' + base + '"/>';
+  for(var t = Math.ceil(loK/10)*10; t <= hiK; t += 10){
+    o += '<text class="c-tick" x="' + px(t).toFixed(1) + '" y="242" text-anchor="middle">' + t + '</text>';
+  }
+  o += '<text class="c-tick" x="' + (W/2) + '" y="262" text-anchor="middle">KPSS puanı</text>';
+
+  $("chart").innerHTML = '<svg viewBox="0 0 ' + W + ' 270" role="img" aria-label="KPSS puan dağılımı ve sizin yeriniz">' + o + '</svg>';
+}
+
+loadYear(2026);
+})();
+</script>
+</body>
+</html>
+
+</body></html>
