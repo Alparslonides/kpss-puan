@@ -138,7 +138,6 @@ svg{display:block;width:100%;height:auto}
 .c-line{fill:none;stroke:var(--live);stroke-width:2;stroke-linejoin:round}
 .c-axis{stroke:var(--rule);stroke-width:1}
 .c-mean{stroke:var(--faint);stroke-width:1;stroke-dasharray:3 3}
-.c-band{fill:var(--osym);opacity:.16}
 .c-fill{fill:var(--live);opacity:.30}
 .c-guide{stroke:var(--rule);stroke-width:1}
 .c-top{stroke:var(--rule);stroke-width:1}
@@ -252,9 +251,8 @@ footer p+p{margin-top:6px}
 <section class="i-out">
   <h2>Dağılımdaki yeriniz</h2>
   <div id="chart" style="margin-bottom:12px"></div>
-  <div class="grid g3">
+  <div class="grid">
     <div class="cell"><div class="k">Tahminî sıralama</div><div class="v live" id="vRank">—</div></div>
-    <div class="cell"><div class="k" id="kBand">Puan aralığı (birinci her testte ±2 net)</div><div class="v" id="vBand">—</div></div>
     <div class="cell"><div class="k">Net değişim oranı</div><div class="v" id="vEq">—</div></div>
   </div>
   <details class="adv">
@@ -322,7 +320,13 @@ footer p+p{margin-top:6px}
     <p class="note"><b>Hesap zinciri.</b> SP = 50 + 10(net − ortalama)/sapma &nbsp;→&nbsp; ASP = ağırlıklı SP toplamı &nbsp;→&nbsp; Puan = 70 + 30[2(ASP − 50) − S] ÷ [2(B − 50) − S], burada S = 10√(w₁² + w₂² + 2w₁w₂ρ).</p>
     <p class="note"><b>Sıralama B'den bağımsızdır.</b> Sıralama z = (ASP − 50)/S değerinden okunur ve bu ifadede B geçmez. Birincinin netlerini değiştirmek puanı değiştirir, sıralamayı değiştirmez.</p>
     <p class="note"><b>Ölçülenler.</b> ρ = 0,183 ve 2024 için B = 88,0344, aşağıdaki 36 gerçek noktaya doğru uydurularak çözüldü: puan = 0,877473·ASP + 22,75218, R² = 0,99992, ortalama artık 0,06 puan. Sıralama eğrisi de bu noktalardan türetildi.</p>
-    <p class="note"><b>Tahmin olanlar.</b> 2026 ortalama ve sapmaları; 2024 dışındaki bütün yılların birinci netleri; gerçek değerler bunlardan sapabilir.</p>
+    <p class="note"><b>2026 gerçek sonuçlarla ayarlandı.</b> 8 gerçek sonuç belgesi ve birincinin belgesi (P1, P2, P3 puanları) çözüldü: ρ = 0,3598 (P1), 0,3631 (P2), 0,3668 (P3); 2026 puanı bu noktalarda en fazla 0,0001 puan sapmayla çıkıyor; ρ yalnız ilk 5 belgeyle çözülmüş, sonradan eklenen 3 belge ayrı bir sınav olarak 0,0001 puan içinde tutturuldu. Sonradan eklenen 5 belge (7 Ekim) modele hiç verilmeden önce tahmin edildi: puan 0,00011 puan içinde tuttu. 14 noktayla ρ yeniden uydurulunca 0,35977 / 0,36300 / 0,36676 çıktı ve bu değerler kullanılıyor (en büyük puan artığı 0,00007). Sıralamada ise ilk 2 belge %0–3,6, son 3 belge (en düşük puan bölgesi) %0–5 sapmıştı (enterpolasyon payı); hepsi kalibrasyona eklenince 14 belgenin tamamı birebir üretiliyor. Birincinin 60 / 56,5 neti, üç puan türünde de çözümden bulunan B ile birebir örtüştü, yani 2026 için B artık tahmin değil, doğrulanmış değerdir. Aday sayısı ÖSYM belgelerindeki 1.559.934'tür. 2026 sıralaması, 2024 eğrisinin bu gerçek sıralara göre düzeltilmiş hâlidir.</p>
+    <p class="note"><b>Tahmin olanlar.</b> 2024 ve 2026 dışındaki bütün yılların birinci netleri; gerçek değerler bunlardan sapabilir. 2026 ortalama ve sapmaları ÖSYM'nin açıkladığı resmî tablodandır. 2026 sıralaması, gerçek noktaların arasında (özellikle sıra 170 ile 445 arası ve 8.000 ile 23.000 arası) enterpolasyondur; yeni sonuç belgeleri eklendikçe daha da doğrulaşır.</p>
+    <p class="note" style="margin-top:12px"><b>2026 KPSS Lisans — gerçek net, puan ve sıralama noktaları</b> (aday sayısı: 1.559.934; 14 nokta)</p>
+    <div class="scroll"><table>
+      <thead><tr><th>GY net</th><th>GK net</th><th>P1</th><th>Sıra</th><th>P2</th><th>Sıra</th><th>P3</th><th>Sıra</th></tr></thead>
+      <tbody><tr><td>60</td><td>56,5</td><td>100</td><td>1</td><td>100</td><td>1</td><td>100</td><td>1</td></tr><tr><td>55</td><td>51,25</td><td>95,71845</td><td>90</td><td>95,6524</td><td>90</td><td>95,57059</td><td>104</td></tr><tr><td>52,25</td><td>56,25</td><td>94,95332</td><td>163</td><td>95,46913</td><td>106</td><td>96,02076</td><td>71</td></tr><tr><td>53,75</td><td>51,25</td><td>94,9126</td><td>168</td><td>94,9329</td><td>159</td><td>94,94354</td><td>169</td></tr><tr><td>53,75</td><td>43,75</td><td>93,40098</td><td>445</td><td>92,83347</td><td>652</td><td>92,19899</td><td>1.070</td></tr><tr><td>45,5</td><td>51,25</td><td>89,59397</td><td>3.183</td><td>90,18421</td><td>2.596</td><td>90,80496</td><td>2.257</td></tr><tr><td>46,25</td><td>48,75</td><td>89,57361</td><td>3.222</td><td>89,9161</td><td>2.946</td><td>90,26635</td><td>2.974</td></tr><tr><td>45,25</td><td>49</td><td>88,97931</td><td>4.177</td><td>89,41048</td><td>3.736</td><td>89,85618</td><td>3.600</td></tr><tr><td>44,5</td><td>48,25</td><td>88,34464</td><td>5.448</td><td>88,76884</td><td>4.887</td><td>89,2055</td><td>4.832</td></tr><tr><td>42,5</td><td>49,5</td><td>87,30721</td><td>8.106</td><td>87,96755</td><td>6.768</td><td>88,65963</td><td>6.103</td></tr><tr><td>41</td><td>38,5</td><td>84,12315</td><td>23.196</td><td>84,02498</td><td>25.708</td><td>83,88183</td><td>30.987</td></tr><tr><td>38,75</td><td>43,75</td><td>83,73074</td><td>26.027</td><td>84,19949</td><td>24.408</td><td>84,67431</td><td>24.755</td></tr><tr><td>36</td><td>49</td><td>83,016</td><td>31.980</td><td>84,08619</td><td>25.246</td><td>85,21596</td><td>20.941</td></tr><tr><td>34,75</td><td>51,75</td><td>82,7644</td><td>34.223</td><td>84,13648</td><td>24.893</td><td>85,59524</td><td>18.635</td></tr></tbody>
+    </table></div>
     <p class="note" style="margin-top:12px"><b>2024 KPSS Lisans — gerçek net, puan ve sıralama noktaları</b> (P3 puanı hesaplanan aday: 1.318.113)</p>
     <div class="scroll"><table>
       <thead><tr><th>GY net</th><th>GK net</th><th>P3 puanı</th><th>Sıralama</th></tr></thead>
@@ -334,8 +338,8 @@ footer p+p{margin-top:6px}
 <script type="application/json" id="kaynak-veri">
 {
  "baslik": "KPSS Puan Hesaplayıcı — kaynak veri ve yöntem",
- "surum": 8,
- "guncelleme": "2026-10-02",
+ "surum": 9,
+ "guncelleme": "2026-10-07",
  "formul": {
   "1_standart_puan": "SP = 50 + 10*(net - ortalama)/standart_sapma",
   "2_asp": "ASP = wGY*SP_GY + wGK*SP_GK",
@@ -511,22 +515,26 @@ footer p+p{margin-top:6px}
   {
    "yil": 2026,
    "gy": [
-    15.5,
-    9.6
+    19.43895,
+    8.86348
    ],
    "gk": [
-    17.0,
-    11.6
+    20.07724,
+    12.15079
    ],
-   "n": 1553000,
+   "n": 1559934,
+   "rho": {
+    "P1": 0.35977,
+    "P2": 0.363,
+    "P3": 0.36676
+   },
    "tepe": [
-    58,
-    56.25
+    60,
+    56.5
    ],
-   "band": 2,
-   "kaynak_ortalama": "TAHMİN",
-   "kaynak_tepe": "Kullanıcı güncellemesi (2 Ekim 2026): birinci netleri 58 / 56,25",
-   "gerekce": "2024 tabanlı. BİRİNCİ NETLERİ GÜNCEL (2 Ekim revizyonu, 58,75/54,5 → 58/56,25); aşağıdaki açıklama 21 Eylül değerlerine aittir. BİRİNCİ NETLERİ (21 Eylül revizyonu, 57/52 → 58,75/54,5): r/KPSS_Lisans'ta bir bilgisayar mühendisi adayının birinci ağızdan beyanı, 113,25 net. Önceki tepe iddialarından farkı: sınavdan yıllar öncesine uzanan tutarlı bir hesap geçmişi var; netler aritmetik olarak tutarlı (GY'de tek yanlış = 58,75; GK 55 doğru 2 yanlış = 54,5); belirsizliğini de doğru aritmetikle veriyor ('112 ya da 113,25' = tek sorunun doğru/yanlış farkı); 7 Ekim'de sonucunu paylaşacağını söylüyor. Doğruysa bu değer B için ALT SINIRDIR: gerçek birinci en az bu kadar, belki daha yüksek. Aynı kişinin beyanına göre 104-107 net yapan bir aday daha var. Bant her testte ±2 net (toplamda ±4) olarak ayarlandı (2 Ekim 2026; önceden ±4) ve 60 netle sınırlanıyor: alt uç beyanın yanlış çıkması, üst uç başka birinin daha yüksek yapması senaryosudur. Önceki 57/52 değeri, doğrulanamayan 107,5 net forum beyanı ile 2024 forum sapması düzeltmesinden türetilmişti. ORTALAMALAR kısıldı (matematik zaman baskısı). SAPMALAR artırıldı; ölçülen mekanizma zaman tahsisi kayması: matematiği erken bırakıp genel kültüre taze giren ile oraya 15 dakika kala varan aday, aynı bilgiyle farklı net yapıyor (Ekşi başlığında 26 aday genel kültürü kolay bulduğunu, 16 aday ise ona vakit kalmadığını yazmış). Aday sayısı 2024'ün başvuru-istatistik oranıyla ölçeklendi (1.708.329 başvuru)."
+   "kaynak_ortalama": "ÖSYM 2026 KPSS Lisans test istatistikleri (Tablo 2), ham puan (net) sütunu",
+   "kaynak_tepe": "Birinci adayın sonuç ekranı (7 Ekim 2026): GY 60 doğru 0 yanlış = 60 net; GK 57 doğru 2 yanlış = 56,5 net; P1/P2/P3 = 100,00000, sıra 1",
+   "gerekce": "7 Ekim 2026 GÜNCELLEMESİ: ortalama ve sapmalar ÖSYM resmî tablosundan (ham puan = net), birinci netleri birinci adayın sonuç ekranından alındı; bu nedenle 2026 artık tahmin değildir. Aşağıdaki açıklama tahmin dönemine (21 Eylül - 2 Ekim) aittir ve tarihsel kayıt olarak bırakılmıştır. 2024 tabanlı. BİRİNCİ NETLERİ GÜNCEL (2 Ekim revizyonu, 58,75/54,5 → 58/56,25); aşağıdaki açıklama 21 Eylül değerlerine aittir. BİRİNCİ NETLERİ (21 Eylül revizyonu, 57/52 → 58,75/54,5): r/KPSS_Lisans'ta bir bilgisayar mühendisi adayının birinci ağızdan beyanı, 113,25 net. Önceki tepe iddialarından farkı: sınavdan yıllar öncesine uzanan tutarlı bir hesap geçmişi var; netler aritmetik olarak tutarlı (GY'de tek yanlış = 58,75; GK 55 doğru 2 yanlış = 54,5); belirsizliğini de doğru aritmetikle veriyor ('112 ya da 113,25' = tek sorunun doğru/yanlış farkı); 7 Ekim'de sonucunu paylaşacağını söylüyor. Doğruysa bu değer B için ALT SINIRDIR: gerçek birinci en az bu kadar, belki daha yüksek. Aynı kişinin beyanına göre 104-107 net yapan bir aday daha var. Bant her testte ±2 net (toplamda ±4) olarak ayarlandı (2 Ekim 2026; önceden ±4) ve 60 netle sınırlanıyor: alt uç beyanın yanlış çıkması, üst uç başka birinin daha yüksek yapması senaryosudur. Önceki 57/52 değeri, doğrulanamayan 107,5 net forum beyanı ile 2024 forum sapması düzeltmesinden türetilmişti. ORTALAMALAR kısıldı (matematik zaman baskısı). SAPMALAR artırıldı; ölçülen mekanizma zaman tahsisi kayması: matematiği erken bırakıp genel kültüre taze giren ile oraya 15 dakika kala varan aday, aynı bilgiyle farklı net yapıyor (Ekşi başlığında 26 aday genel kültürü kolay bulduğunu, 16 aday ise ona vakit kalmadığını yazmış). Aday sayısı 2024'ün başvuru-istatistik oranıyla ölçeklendi (1.708.329 başvuru)."
   }
  ],
  "cozulen_2024": {
@@ -537,6 +545,19 @@ footer p+p{margin-top:6px}
   "yontem": "Puan ASP'de doğrusal olduğundan 36 gerçek (ASP, puan) noktasına doğru uyduruldu: puan = 0.877473*ASP + 22.75218. Eğimden D=60/p, oradan S ve B çözüldü.",
   "artik": "ortalama 0.06 puan, en büyük 0.35 puan",
   "not": "rho 0.45 varsayılıyordu, ölçülen 0.183. 2024 tepesi 52/54 sanılıyordu, gerçek ~109.75 toplam net."
+ },
+ "cozulen_2026": {
+  "rho": {"P1": 0.35977, "P2": 0.363, "P3": 0.36676},
+  "S": {"P1": 8.55046, "P2": 8.33211, "P3": 8.26668},
+  "B": {"P1": 91.0261, "P2": 89.4474, "P3": 87.8688},
+  "yontem": "5 gerçek belge + birinci (sonradan 3 belge daha doğrulama olarak eklendi): puan, ASP'de doğrusal olduğundan her puan türü için puan = a*ASP + b uydurulup S ve B çözüldü. Çözülen B, birincinin 60/56,5 netinden hesaplanan B ile üç puan türünde de 4 ondalığa kadar birebir örtüştü.",
+  "artik": "tüm noktalarda en fazla 0.0001 puan"
+ },
+ "kalibrasyon_2026": {
+  "aciklama": "Gerçek 2026 sonuç belgeleri. 2026 sıralaması, 2024 eğrisine bu noktalardaki log10 farkların ASP üzerinde doğrusal enterpolasyonuyla eklenmesiyle bulunur; en alt noktanın altında fark 1,2 S içinde sıfıra iner.",
+  "aday_sayisi": 1559934,
+  "sutunlar": ["gy_net","gk_net","p1_sira","p2_sira","p3_sira"],
+  "noktalar": [[60,56.5,1,1,1],[55,51.25,90,90,104],[52.25,56.25,163,106,71],[53.75,51.25,168,159,169],[53.75,43.75,445,652,1070],[45.5,51.25,3183,2596,2257],[46.25,48.75,3222,2946,2974],[42.5,49.5,8106,6768,6103],[41,38.5,23196,25708,30987],[45.25,49,4177,3736,3600],[44.5,48.25,5448,4887,4832],[36,49,31980,25246,20941],[34.75,51.75,34223,24893,18635],[38.75,43.75,26027,24408,24755]]
  },
  "kalibrasyon_2024": {
   "aciklama": "Gerçek net-puan-sıralama noktaları. Sıralama eğrisinin kaynağı.",
@@ -908,19 +929,20 @@ footer p+p{margin-top:6px}
   ]
  },
  "acik_konular": [
-  "2026 resmî verisi 7 Ekim 2026'da açıklanıyor; dört kutu güncellenecek.",
-  "2024 dışındaki yılların birinci netleri tahmin. 2024'ünki 3.75 net saptı, ötekiler de sapabilir.",
+  "2026 resmî ortalama ve sapmalar ile birinci netleri 7 Ekim 2026'da girildi (GY 19,43895 / 8,86348; GK 20,07724 / 12,15079; birinci 60 / 56,5).",
+  "2026 için ρ ve B gerçek sonuç belgelerinden çözüldü (ρ 0,36); aday sayısı 1.559.934. Sıra 170 ile 445 arası ve 8.000 ile 23.000 arası enterpolasyondur, yeni belgeler eklenebilir.",
+  "2024 ve 2026 dışındaki yılların birinci netleri tahmin. 2024'ünki 3.75 net saptı, ötekiler de sapabilir.",
   "Herhangi bir yılın tek bir sonuç belgesi (net + P1/P2/P3 puan + sıralama) o yılın rho ve B değerini çözmeye yeter.",
   "Sıralama eğrisi 2024 biçimini taşıyor; diğer yıllara uygulanışı yaklaşık.",
-  "2026 birinci netleri 2 Ekim 2026'da 58 / 56,25 olarak güncellendi; bant 2 Ekim 2026'da her testte ±4 netten ±2 nete (toplamda ±4) indirildi.",
+  "2026 birinci netleri 7 Ekim 2026'da 60 / 56,5 olarak güncellendi (önceki tahmin 58 / 56,25). Puan aralığı bandı 7 Ekim 2026'da arayüzden tamamen kaldırıldı.",
   "Ekşi ve forum verisi tepe hakkında zayıf kanıttır: B, 1,7 milyon kişinin maksimumudur, forumlar ise 99. yüzdeliği gösterir."
  ]
 }
 </script>
 
 <footer>
-  <p>Ortalama ve standart sapma değerleri, ÖSYM'nin her sınav sonrası yayımladığı testlere ait sayısal bilgiler tablolarından alınmıştır ve net sayısı üzerinden verilmiştir. 2018–2020 tablolarında doğru–net ayrımı bulunmadığından o yılların değerleri net kabul edilmiştir. 2025 yalnız A grubu oturumudur; aday havuzu küçük ve seçilmiştir. 2026 satırı tahminîdir, resmî veri açıklandığında kutuları güncelleyiniz.</p>
-  <p>Formüldeki B değeri ÖSYM tarafından açıklanmaz, birincinin netlerinden türetilir ve sonucu en çok etkileyen belirsizlik kaynağıdır; puan aralığı sütunu bu belirsizliğin büyüklüğünü gösterir; 2026 için bu bant, birincinin GY ve GK netlerinin her birinde ±2 net (toplamda ±4; 60 netle sınırlı) olarak tutulmaktadır; o yılın tepesi 58 / 56,25 net olarak alınmıştır. Korelasyon katsayısı açıklanmaz; buradaki 0,183 değeri 2024 sonuçlarından geriye doğru çözülerek ölçülmüştür. 2024 için girilen birinci netleri de tahmin değil, aynı çözümden elde edilen B = 88,03 değerine karşılık gelir; diğer yılların birinci netleri tahminîdir. Tahminî sıralama, 2024 KPSS Lisans sonuçlarından derlenen 36 gerçek net–puan–sıralama noktasına dayanır. Normal dağılım varsayımı ortalamanın 1 standart sapma üstüne kadar doğru sonuç verir, üzerinde giderek iyimserleşir: 2,5 standart sapmada yaklaşık 4, 3 standart sapmada 7–13 kat. Uygulama bu ölçülen eğriyi kullanır, normal dağılımın verdiği sayı ise hesap ayrıntılarında ayrıca gösterilir. Eğri 2024 dağılımının biçimini diğer yıllara taşıdığından, 2024 dışındaki yıllar için yaklaşıktır.</p>
+  <p>Ortalama ve standart sapma değerleri, ÖSYM'nin her sınav sonrası yayımladığı testlere ait sayısal bilgiler tablolarından alınmıştır ve net sayısı üzerinden verilmiştir. 2018–2020 tablolarında doğru–net ayrımı bulunmadığından o yılların değerleri net kabul edilmiştir. 2025 yalnız A grubu oturumudur; aday havuzu küçük ve seçilmiştir. 2026 ortalama ve sapmaları ÖSYM'nin 7 Ekim 2026'da açıkladığı resmî tablodan alınmıştır (ham puan sütunu, net).</p>
+  <p>Formüldeki B değeri ÖSYM tarafından açıklanmaz, birincinin netlerinden türetilir ve sonucu en çok etkileyen belirsizlik kaynağıdır; 2026 için o yılın tepesi, birinci adayın sonuç ekranına göre 60 / 56,5 net olarak alınmış ve gerçek sonuç belgelerindeki puanlarla çözülerek doğrulanmıştır. Korelasyon katsayısı açıklanmaz; 2024 için 0,183, 2026 için 0,36 civarı (P1 0,35977, P2 0,36300, P3 0,36676) olup ikisi de gerçek sonuç belgelerinden geriye doğru çözülerek ölçülmüştür. 2024 için girilen birinci netleri de tahmin değil, aynı çözümden elde edilen B = 88,03 değerine karşılık gelir; 2026 ve 2024 dışındaki yılların birinci netleri tahminîdir (2026'nınki birinci adayın sonuç ekranından alınmıştır). Tahminî sıralama, 2024 KPSS Lisans sonuçlarından derlenen 36 gerçek net–puan–sıralama noktasına dayanır. Normal dağılım varsayımı ortalamanın 1 standart sapma üstüne kadar doğru sonuç verir, üzerinde giderek iyimserleşir: 2,5 standart sapmada yaklaşık 4, 3 standart sapmada 7–13 kat. Uygulama bu ölçülen eğriyi kullanır, normal dağılımın verdiği sayı ise hesap ayrıntılarında ayrıca gösterilir. Eğri 2024 dağılımının biçimini diğer yıllara taşıdığından, 2024 dışındaki yıllar için yaklaşıktır; 2026 için bu eğri, 14 gerçek sonuç noktasındaki sıralara oturtulmuştur.</p>
   <p>Bir testten en az 1 ham puanı (1 neti) bulunmayan aday, o test için yapılan hesaplamalara alınmaz ve kendisine o testin standart puanı hesaplanmaz. Bir puan türünün oluşabilmesi için o türe giren testlerin tümünden standart puan gerektiğinden, Genel Yetenek veya Genel Kültür testlerinden birinde 1 netin altında kalan adayın KPSS puanı hesaplanmaz.</p>
   <p>Sonuç tahminîdir. Kesin puanı ÖSYM hesaplar.</p>
   <p style="margin-top:14px;text-align:center;font-weight:600;letter-spacing:.04em">Alparslonides</p>
@@ -942,7 +964,7 @@ var YEARS = {
   2023:{top:[51,52], gy:[15.944,7.553],  gk:[16.954,9.681],  n:782640},
   2024:{top:[54.25,55.5], gy:[16.730,9.098],  gk:[18.861,10.517], n:1336745},
   2025:{top:[54,56], gy:[17.42994,9.10836], gk:[14.30211,9.25736], n:310704},
-  2026:{top:[58,56.25], gy:[15.5,9.6], gk:[17.0,11.6], n:1553000, est:true, band:2}
+  2026:{top:[60,56.5], gy:[19.43895,8.86348], gk:[20.07724,12.15079], n:1559934, rho:{p1:0.35977,p2:0.363,p3:0.36676}}
 };
 var SURV=[[-1.035,-0.0736],[-0.531,-0.1871],[-0.032,-0.3373],[0.251,-0.4408],[0.442,-0.5234],[0.646,-0.6085],[0.771,-0.6714],[0.804,-0.6898],[1.154,-0.8780],[1.329,-0.9853],[1.653,-1.1596],[1.690,-1.1878],[1.851,-1.2954],[2.295,-1.5853],[2.517,-1.7381],[2.625,-1.8187],[2.689,-1.8725],[2.707,-1.8793],[2.827,-1.9493],[2.912,-2.0500],[2.974,-2.1070],[3.122,-2.2447],[3.197,-2.3082],[3.238,-2.3607],[3.271,-2.3986],[3.331,-2.4866],[3.632,-2.8339],[3.816,-3.1381],[3.932,-3.3528],[4.027,-3.5289],[4.116,-3.7343],[4.291,-4.1332],[4.612,-5.1657],[4.925,-5.8189]];
 function empUst(z){
@@ -963,7 +985,6 @@ function empUst(z){
   return 1 - cdf(z);
 }
 var W = {p3:[0.5,0.5], p2:[0.6,0.4], p1:[0.7,0.3]};
-var curBand = 2;
 var LBL = {p3:"P3", p2:"P2", p1:"P1"};
 
 function $(id){return document.getElementById(id);}
@@ -997,8 +1018,43 @@ function puanOf(A,B,S){
   return v > 100 ? 100 : v;
 }
 function sOf(w,rho){ return 10*Math.sqrt(w[0]*w[0] + w[1]*w[1] + 2*w[0]*w[1]*rho); }
+// 2026 gerçek sonuç belgeleri: [GY net, GK net, P1 sırası, P2 sırası, P3 sırası]
+var R26 = [[41,38.5,23196,25708,30987],[55,51.25,90,90,104],[42.5,49.5,8106,6768,6103],[53.75,51.25,168,159,169],[52.25,56.25,163,106,71],[60,56.5,1,1,1],[45.5,51.25,3183,2596,2257],[46.25,48.75,3222,2946,2974],[53.75,43.75,445,652,1070],[45.25,49,4177,3736,3600],[44.5,48.25,5448,4887,4832],[36,49,31980,25246,20941],[34.75,51.75,34223,24893,18635],[38.75,43.75,26027,24408,24755]];
+var R26N = 1559934, R26T = {p1:0, p2:1, p3:2};
+var corrCache = {};
+function corr26(type, P, w, S){
+  var key = type + "|" + [P.mgy,P.sgy,P.mgk,P.sgk,S].join(",");
+  if(corrCache[key]) return corrCache[key];
+  var a = R26.map(function(r){
+    var asp = aspOf(r[0], r[1], w, P);
+    var z = (asp-50)/S;
+    var y = Math.log(r[2+R26T[type]]/R26N)/Math.LN10;
+    var base = Math.log(empUst(z))/Math.LN10;
+    return [asp, y-base];
+  }).sort(function(p,q){ return p[0]-q[0]; });
+  return corrCache[key] = a;
+}
+function delta26(a, asp, S){
+  var n = a.length;
+  if(asp >= a[n-1][0]) return a[n-1][1];
+  if(asp <= a[0][0]){
+    var k = Math.max(0, 1 - (a[0][0]-asp)/(1.2*S));
+    return a[0][1]*k;
+  }
+  for(var i=1;i<n;i++){
+    if(asp <= a[i][0]){
+      var t = (asp-a[i-1][0])/(a[i][0]-a[i-1][0]);
+      return a[i-1][1] + t*(a[i][1]-a[i-1][1]);
+    }
+  }
+  return a[n-1][1];
+}
 
-var yearsBox = $("years"), currentYear = null, dyMode = false;
+
+var yearsBox = $("years"), currentYear = null, dyMode = false, rhoEdited = false;
+function yearRho(y,t){ var d = YEARS[y]; return (d && d.rho) ? d.rho[t] : 0.183; }
+function setRho(){ if(rhoEdited) return; var y = currentYear === null ? lastYear : currentYear; $("tRho").value = fn(yearRho(y,$("ptur").value),5); }
+var lastYear = 2026;
 Object.keys(YEARS).forEach(function(y){
   var b = document.createElement("button");
   b.className = "yr" + (YEARS[y].est ? " est" : "");
@@ -1020,9 +1076,7 @@ function loadYear(y){
   Array.prototype.forEach.call(yearsBox.children, function(b){
     b.setAttribute("aria-pressed", b.textContent === String(y) ? "true" : "false");
   });
-  curBand = d.band || 2;
-  $("kBand").textContent = "Puan aralığı (birinci her testte ±" + fn(curBand,0) + " net)";
-  currentYear = y;
+  currentYear = y; lastYear = y; rhoEdited = false; setRho();
   $("advTag").textContent = "";
   $("meta").textContent = fint(d.n) + " aday";
   calc();
@@ -1081,8 +1135,8 @@ function readDY(){
 ["mGY","sGY","mGK","sGK","nAday","tTpGY","tTpGK"].forEach(function(id){
   $(id).addEventListener("input", function(){ markEdited(); syncMeta(); calc(); });
 });
-$("tRho").addEventListener("input", calc);
-$("ptur").addEventListener("change", calc);
+$("tRho").addEventListener("input", function(){ rhoEdited = true; calc(); });
+$("ptur").addEventListener("change", function(){ setRho(); calc(); });
 
 function calc(){
   var P = {mgy:parseNum($("mGY").value), sgy:parseNum($("sGY").value),
@@ -1125,21 +1179,21 @@ function calc(){
               : (!okGY ? "Genel Yetenek netiniz" : "Genel Kültür netiniz");
     $("vASP").textContent = "—"; $("vRank").textContent = "—";
     $("vz").textContent = "—"; $("vRankN").textContent = "—";
-    $("vBand").textContent = "—"; $("score").textContent = "—";
+    $("score").textContent = "—";
     $("scoreSub").textContent = hangi + " 1'in altında. ÖSYM kuralı gereği bu testten standart puan oluşmaz, dolayısıyla KPSS puanı hesaplanmaz.";
     $("steps").innerHTML = '<div><b>Hesap yapılmadı</b><br>' + hangi +
       " 1 ham puanın altında kaldığı için o testin standart puanı üretilmez.</div>";
-    draw(NaN,B,S,NaN,NaN);
+    draw(NaN,B,S);
     return;
   }
 
-  var cl = function(x){ return Math.max(0, Math.min(60, x)); };
-  var sHi = puanOf(asp, aspOf(cl(tpGY-curBand),cl(tpGK-curBand),w,P), S);
-  var sLo = puanOf(asp, aspOf(cl(tpGY+curBand),cl(tpGK+curBand),w,P), S);
-  $("vBand").textContent = (isFinite(sLo) && isFinite(sHi)) ? fx(sLo,1) + " – " + fx(sHi,1) : "—";
-
   $("vASP").textContent = fx(asp,2);
   var zasp = (asp-50)/S, above = 1 - cdf(zasp), emp = empUst(zasp);
+  var tkey = $("ptur").value;
+  if(String(currentYear) === "2026" && !rhoEdited){
+    var ca = corr26(tkey, P, w, S);
+    emp = Math.min(1, emp*Math.pow(10, delta26(ca, asp, S)));
+  }
   $("vRank").textContent = (isFinite(n) && n > 0) ? fint(Math.max(1, emp*n)) : "—";
   $("vz").textContent = fx(zasp,3);
   $("vRankN").textContent = (isFinite(n) && n > 0) ? fint(Math.max(1, above*n)) : "—";
@@ -1157,17 +1211,17 @@ function calc(){
   }
 
   steps(P,myGY,myGK,py,pk,w,asp,B,S,score);
-  draw(asp,B,S,sLo,sHi);
+  draw(asp,B,S);
 }
 
 function years(w,rho,myGY,myGK,ok){
-  var S = sOf(w,rho);
+  var S = sOf(w,rho), tk = $("ptur").value;
   var h = "<thead><tr><th>Yıl</th><th>GY ort.</th><th>GK ort.</th><th>Birinci</th><th>B</th><th>ASP</th><th>Puan</th></tr></thead><tbody>";
   Object.keys(YEARS).forEach(function(y){
     var d = YEARS[y];
     var P = {mgy:d.gy[0], sgy:d.gy[1], mgk:d.gk[0], sgk:d.gk[1]};
     var A = aspOf(myGY,myGK,w,P), B = aspOf(d.top[0],d.top[1],w,P);
-    var s = ok ? puanOf(A,B,S) : NaN;
+    var s = ok ? puanOf(A,B,rhoEdited ? S : sOf(w,yearRho(y,tk))) : NaN;
     h += '<tr' + (String(y) === String(currentYear) ? ' class="on"' : '') + '>'
        + "<td>" + y + (d.est ? " *" : "") + "</td>"
        + "<td>" + fx(d.gy[0],2) + "</td><td>" + fx(d.gk[0],2) + "</td>"
@@ -1192,7 +1246,7 @@ function steps(P,myGY,myGK,py,pk,w,asp,B,S,score){
   $("steps").innerHTML = h;
 }
 
-function draw(asp,B,S,sLo,sHi){
+function draw(asp,B,S){
   var D = 2*(B-50) - S;
   if(!(D > 0)){ $("chart").innerHTML = ""; return; }
   var W = 680, base = 222, H = 130;
@@ -1215,10 +1269,6 @@ function draw(asp,B,S,sLo,sHi){
   var line = seg(loK,hiK);
   var o = '<path class="c-area" d="' + close(line,loK,hiK) + '"/>';
 
-  if(isFinite(sLo) && isFinite(sHi) && sHi > sLo){
-    o += '<rect class="c-band" x="' + px(sLo).toFixed(1) + '" y="' + (base-H-8).toFixed(1)
-       + '" width="' + Math.max(2,(px(sHi)-px(sLo))).toFixed(1) + '" height="' + (H+8).toFixed(1) + '"/>';
-  }
   if(isFinite(myK) && myK > loK){
     o += '<path class="c-fill" d="' + close(seg(loK,myK),loK,myK) + '"/>';
   }
